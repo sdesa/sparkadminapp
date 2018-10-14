@@ -1,0 +1,263 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Root stack for the Amplify AWS CloudFormation provider",
+	"Parameters": {
+		"DeploymentBucketName": {
+			"Description": "Name of the common deployment bucket provided by the parent stack",
+			"Type": "String",
+			"Default": "DeploymentBucket"
+		},
+		"AuthRoleName": {
+			"Type": "String",
+			"Default": "AuthRoleName"
+		},
+		"UnauthRoleName": {
+			"Type": "String",
+			"Default": "UnauthRoleName"
+		}
+	},
+	"Resources": {
+		"DeploymentBucket": {
+			"Type": "AWS::S3::Bucket",
+			"DeletionPolicy": "Retain",
+			"Properties": {
+				"BucketName": {
+					"Ref": "DeploymentBucketName"
+				}
+			}
+		},
+		"AuthRole": {
+			"Type": "AWS::IAM::Role",
+			"Properties": {
+				"RoleName": {
+					"Ref": "AuthRoleName"
+				},
+				"AssumeRolePolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Sid": "",
+							"Effect": "Allow",
+							"Principal": {
+								"Federated": "cognito-identity.amazonaws.com"
+							},
+							"Action": "sts:AssumeRoleWithWebIdentity",
+							"Condition": {
+								"ForAnyValue:StringLike": {
+									"cognito-identity.amazonaws.com:amr": "authenticated"
+								}
+							}
+						}
+					]
+				}
+			}
+		},
+		"UnauthRole": {
+			"Type": "AWS::IAM::Role",
+			"Properties": {
+				"RoleName": {
+					"Ref": "UnauthRoleName"
+				},
+				"AssumeRolePolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Sid": "",
+							"Effect": "Allow",
+							"Principal": {
+								"Federated": "cognito-identity.amazonaws.com"
+							},
+							"Action": "sts:AssumeRoleWithWebIdentity",
+							"Condition": {
+								"ForAnyValue:StringLike": {
+									"cognito-identity.amazonaws.com:amr": "unauthenticated"
+								}
+							}
+						}
+					]
+				}
+			}
+		},
+		"authsparkadminappcognito": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/sparkadminapp-20181013173319-deployment/amplify-cfn-templates/auth/sparkadminappcognito-cloudformation-template.yml",
+				"Parameters": {
+					"userPoolName": "sparkadminappuserpool",
+					"autoVerifiedAttributes": "email",
+					"mfaConfiguration": "OFF",
+					"mfaTypes": "SMS Text Message",
+					"roleName": "sparkadminappcognito_sns-role",
+					"roleExternalId": "sparkadminappcognito_role_external_id",
+					"policyName": "sparkadminappcognito-sns-policy",
+					"smsAuthenticationMessage": "Your authentication code is {####}",
+					"smsVerificationMessage": "Your verification code is {####}",
+					"emailVerificationSubject": "Your verification code",
+					"emailVerificationMessage": "Your verification code is {####}",
+					"defaultPasswordPolicy": false,
+					"passwordPolicyMinLength": 8,
+					"passwordPolicyCharacters": "Requires Lowercase,Requires Uppercase,Requires Numbers,Requires Symbols",
+					"requiredAttributes": "email",
+					"userpoolClientName": "sparkadminappcognito_app_client",
+					"userpoolClientGenerateSecret": true,
+					"userpoolClientRefreshTokenValidity": 30,
+					"userpoolClientReadAttributes": "email,phone_number",
+					"mfaLambdaRole": "sparkadminappcognito_totp_lambda_role",
+					"mfaLambdaLogPolicy": "sparkadminappcognito_totp_lambda_log_policy",
+					"mfaPassRolePolicy": "sparkadminappcognito_totp_pass_role_policy",
+					"mfaLambdaIAMPolicy": "sparkadminappcognito_totp_lambda_iam_policy",
+					"userpoolClientLambdaRole": "sparkadminappcognito_userpoolclient_lambda_role",
+					"userpoolClientLogPolicy": "sparkadminappcognito_userpoolclient_lambda_log_policy",
+					"userpoolClientLambdaPolicy": "sparkadminappcognito_userpoolclient_lambda_iam_policy",
+					"userpoolClientSetAttributes": true,
+					"identityPoolName": "sparkadminappcognito_identitypool_a7d7c10c",
+					"allowUnauthenticatedIdentities": true,
+					"thirdPartyAuth": false,
+					"lambdaLogPolicy": "sparkadminappcognito_lambda_log_policy",
+					"openIdLambdaRoleName": "sparkadminappcognito_openid_lambda_role",
+					"openIdRolePolicy": "sparkadminappcognito_openid_pass_role_policy",
+					"openIdLambdaIAMPolicy": "sparkadminappcognito_openid_lambda_iam_policy",
+					"openIdLogPolicy": "sparkadminappcognito_openid_lambda_log_policy",
+					"useDefault": "manual",
+					"authSelections": "userPoolOnly",
+					"resourceName": "sparkadminappcognito",
+					"userpoolClientWriteAttributes": "phone_number,email",
+					"unAuthRoleName": "sparkadminapp-20181013173319-unauthRole",
+					"authRoleName": "sparkadminapp-20181013173319-authRole",
+					"unAuthRoleArn": "arn:aws:iam::849422063466:role/sparkadminapp-20181013173319-unauthRole",
+					"authRoleArn": "arn:aws:iam::849422063466:role/sparkadminapp-20181013173319-authRole"
+				}
+			}
+		},
+		"storageappdynamodb": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/sparkadminapp-20181013173319-deployment/amplify-cfn-templates/storage/appdynamodb-cloudformation-template.json",
+				"Parameters": {
+					"tableName": "game",
+					"partitionKeyName": "GameID",
+					"partitionKeyType": "N"
+				}
+			}
+		},
+		"hostingS3AndCloudFront": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/sparkadminapp-20181013173319-deployment/amplify-cfn-templates/hosting/template.json",
+				"Parameters": {}
+			}
+		},
+		"functionsparkadminappda27ea0a": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/sparkadminapp-20181013173319-deployment/amplify-cfn-templates/function/sparkadminappda27ea0a-cloudformation-template.json",
+				"Parameters": {
+					"storageappdynamodbName": {
+						"Fn::GetAtt": [
+							"storageappdynamodb",
+							"Outputs.Name"
+						]
+					},
+					"storageappdynamodbArn": {
+						"Fn::GetAtt": [
+							"storageappdynamodb",
+							"Outputs.Arn"
+						]
+					}
+				}
+			}
+		},
+		"apisparkapi": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/sparkadminapp-20181013173319-deployment/amplify-cfn-templates/api/sparkapi-cloudformation-template.json",
+				"Parameters": {
+					"functionsparkadminappda27ea0aName": {
+						"Fn::GetAtt": [
+							"functionsparkadminappda27ea0a",
+							"Outputs.Name"
+						]
+					},
+					"functionsparkadminappda27ea0aArn": {
+						"Fn::GetAtt": [
+							"functionsparkadminappda27ea0a",
+							"Outputs.Arn"
+						]
+					}
+				}
+			}
+		}
+	},
+	"Outputs": {
+		"Region": {
+			"Description": "CloudFormation provider root stack Region",
+			"Value": {
+				"Ref": "AWS::Region"
+			},
+			"Export": {
+				"Name": {
+					"Fn::Sub": "${AWS::StackName}-Region"
+				}
+			}
+		},
+		"StackName": {
+			"Description": "CloudFormation provider root stack ID",
+			"Value": {
+				"Ref": "AWS::StackName"
+			},
+			"Export": {
+				"Name": {
+					"Fn::Sub": "${AWS::StackName}-StackName"
+				}
+			}
+		},
+		"StackId": {
+			"Description": "CloudFormation provider root stack name",
+			"Value": {
+				"Ref": "AWS::StackId"
+			},
+			"Export": {
+				"Name": {
+					"Fn::Sub": "${AWS::StackName}-StackId"
+				}
+			}
+		},
+		"DeploymentBucketName": {
+			"Description": "CloudFormation provider root stack deployment bucket name",
+			"Value": {
+				"Ref": "DeploymentBucketName"
+			},
+			"Export": {
+				"Name": {
+					"Fn::Sub": "${AWS::StackName}-DeploymentBucketName"
+				}
+			}
+		},
+		"AuthRoleArn": {
+			"Value": {
+				"Fn::GetAtt": [
+					"AuthRole",
+					"Arn"
+				]
+			}
+		},
+		"UnauthRoleArn": {
+			"Value": {
+				"Fn::GetAtt": [
+					"UnauthRole",
+					"Arn"
+				]
+			}
+		},
+		"AuthRoleName": {
+			"Value": {
+				"Ref": "AuthRole"
+			}
+		},
+		"UnauthRoleName": {
+			"Value": {
+				"Ref": "UnauthRole"
+			}
+		}
+	}
+}

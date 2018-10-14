@@ -1,0 +1,36 @@
+{
+    "paths": [
+        {
+            "name": "/items",
+            "lambdaFunction": "sparkadminappda27ea0a",
+            "privacy": {
+                "protected": true,
+                "auth": "rw",
+                "unauth": "r"
+            }
+        }
+    ],
+    "resourceName": "sparkapi",
+    "apiName": "sparkadminappecf5dc32",
+    "functionArns": [
+        {
+            "lambdaFunction": "sparkadminappda27ea0a"
+        }
+    ],
+    "privacy": {
+        "auth": 1,
+        "unauth": 1,
+        "authRoleName": "sparkadminapp-20181013173319-authRole",
+        "unAuthRoleName": "sparkadminapp-20181013173319-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "sparkadminappda27ea0a",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}

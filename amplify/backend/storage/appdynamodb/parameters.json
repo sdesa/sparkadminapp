@@ -1,0 +1,5 @@
+{
+    "tableName": "game",
+    "partitionKeyName": "GameID",
+    "partitionKeyType": "N"
+}

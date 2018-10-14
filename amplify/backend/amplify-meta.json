@@ -1,0 +1,130 @@
+{
+	"providers": {
+		"awscloudformation": {
+			"AuthRoleName": "sparkadminapp-20181013173319-authRole",
+			"UnauthRoleArn": "arn:aws:iam::849422063466:role/sparkadminapp-20181013173319-unauthRole",
+			"AuthRoleArn": "arn:aws:iam::849422063466:role/sparkadminapp-20181013173319-authRole",
+			"Region": "us-east-1",
+			"DeploymentBucketName": "sparkadminapp-20181013173319-deployment",
+			"UnauthRoleName": "sparkadminapp-20181013173319-unauthRole",
+			"StackName": "sparkadminapp-20181013173319",
+			"StackId": "arn:aws:cloudformation:us-east-1:849422063466:stack/sparkadminapp-20181013173319/fcba9f80-cf37-11e8-87f3-503aca261699"
+		}
+	},
+	"auth": {
+		"sparkadminappcognito": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/sparkadminapp-20181013173319-deployment/amplify-cfn-templates/auth/sparkadminappcognito-cloudformation-template.yml",
+				"logicalId": "authsparkadminappcognito"
+			},
+			"lastPushTimeStamp": "2018-10-14T00:53:40.676Z",
+			"output": {
+				"AppClientSecret": "1t8d93rftetphi3dkdk2l1shdca9r40grr28vro6gbksh740b05t",
+				"UserPoolId": "us-east-1_cdUN8tFB0",
+				"AppClientIDWeb": "4q34m58j12ncjscs300p2du57v",
+				"AppClientID": "2vddd1n7hhum9a3vrvr1evvr3",
+				"IdentityPoolId": "us-east-1:1aee7764-85fd-4ba7-ad07-2387b27c6451",
+				"IdentityPoolName": "sparkadminappcognito_identitypool_a7d7c10c",
+				"UserPoolName": "sparkadminappuserpool"
+			},
+			"lastPushDirHash": "rcOhq/JquiAhoQBpF4sfAxw/dzM=",
+			"[object Object]": {}
+		}
+	},
+	"storage": {
+		"appdynamodb": {
+			"service": "DynamoDB",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/sparkadminapp-20181013173319-deployment/amplify-cfn-templates/storage/appdynamodb-cloudformation-template.json",
+				"logicalId": "storageappdynamodb"
+			},
+			"lastPushTimeStamp": "2018-10-14T00:53:40.657Z",
+			"output": {
+				"PartitionKeyName": "GameID",
+				"Region": "us-east-1",
+				"Arn": "arn:aws:dynamodb:us-east-1:849422063466:table/game",
+				"PartitionKeyType": "N",
+				"Name": "game"
+			},
+			"lastPushDirHash": "ctPb2aXa0WOnDcpR3kCSQC/UCog="
+		}
+	},
+	"hosting": {
+		"S3AndCloudFront": {
+			"service": "S3AndCloudFront",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/sparkadminapp-20181013173319-deployment/amplify-cfn-templates/hosting/template.json",
+				"logicalId": "hostingS3AndCloudFront"
+			},
+			"lastPushTimeStamp": "2018-10-14T00:53:40.662Z",
+			"output": {
+				"S3BucketSecureURL": "https://sparkadminapp-20181013175940--hostingbucket.s3.amazonaws.com",
+				"WebsiteURL": "http://sparkadminapp-20181013175940--hostingbucket.s3-website-us-east-1.amazonaws.com",
+				"Region": "us-east-1",
+				"HostingBucketName": "sparkadminapp-20181013175940--hostingbucket"
+			},
+			"lastPushDirHash": "AoWcKf5RHhJwlTxRGKVYgP3o3uE="
+		}
+	},
+	"function": {
+		"sparkadminappda27ea0a": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "storage",
+					"resourceName": "appdynamodb",
+					"attributes": [
+						"Name",
+						"Arn"
+					]
+				}
+			],
+			"lastBuildTimeStamp": "2018-10-13T23:11:58.299Z",
+			"lastPackageTimeStamp": "2018-10-13T23:12:05.161Z",
+			"distZipFilename": "sparkadminappda27ea0a-1539472318-latest-build.zip",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/sparkadminapp-20181013173319-deployment/amplify-cfn-templates/function/sparkadminappda27ea0a-cloudformation-template.json",
+				"logicalId": "functionsparkadminappda27ea0a"
+			},
+			"lastPushTimeStamp": "2018-10-14T00:53:40.668Z",
+			"output": {
+				"Region": "us-east-1",
+				"Arn": "arn:aws:lambda:us-east-1:849422063466:function:sparkadminappda27ea0a",
+				"Name": "sparkadminappda27ea0a"
+			},
+			"lastPushDirHash": "/IiZUqxLKIJMl2DljGUvXAA4dGA="
+		}
+	},
+	"api": {
+		"sparkapi": {
+			"service": "API Gateway",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [
+				{
+					"category": "function",
+					"resourceName": "sparkadminappda27ea0a",
+					"attributes": [
+						"Name",
+						"Arn"
+					]
+				}
+			],
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/sparkadminapp-20181013173319-deployment/amplify-cfn-templates/api/sparkapi-cloudformation-template.json",
+				"logicalId": "apisparkapi"
+			},
+			"lastPushTimeStamp": "2018-10-14T00:53:40.672Z",
+			"output": {
+				"ApiName": "sparkapi",
+				"RootUrl": "https://fo1j7b5lfc.execute-api.us-east-1.amazonaws.com/Prod"
+			},
+			"lastPushDirHash": "q/RvE80u30LNBnd3U9iZTTOOSl4="
+		}
+	}
+}
