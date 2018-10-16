@@ -8,6 +8,15 @@
                 "auth": "rw",
                 "unauth": "r"
             }
+        },
+        {
+            "name": "/games",
+            "lambdaFunction": "sparkadminappc048ca10",
+            "privacy": {
+                "protected": true,
+                "auth": "rw",
+                "unauth": "rw"
+            }
         }
     ],
     "resourceName": "sparkapi",
@@ -15,11 +24,14 @@
     "functionArns": [
         {
             "lambdaFunction": "sparkadminappda27ea0a"
+        },
+        {
+            "lambdaFunction": "sparkadminappc048ca10"
         }
     ],
     "privacy": {
-        "auth": 1,
-        "unauth": 1,
+        "auth": 2,
+        "unauth": 2,
         "authRoleName": "sparkadminapp-20181013173319-authRole",
         "unAuthRoleName": "sparkadminapp-20181013173319-unauthRole"
     },
@@ -31,6 +43,15 @@
                 "Name",
                 "Arn"
             ]
+        },
+        {
+            "category": "function",
+            "resourceName": "sparkadminappc048ca10",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
         }
-    ]
+    ],
+    "uuid": "0bb9d822"
 }

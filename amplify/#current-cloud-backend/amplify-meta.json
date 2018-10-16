@@ -19,17 +19,17 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/sparkadminapp-20181013173319-deployment/amplify-cfn-templates/auth/sparkadminappcognito-cloudformation-template.yml",
 				"logicalId": "authsparkadminappcognito"
 			},
-			"lastPushTimeStamp": "2018-10-14T00:53:40.676Z",
+			"lastPushTimeStamp": "2018-10-14T05:53:52.967Z",
 			"output": {
 				"AppClientSecret": "1t8d93rftetphi3dkdk2l1shdca9r40grr28vro6gbksh740b05t",
 				"UserPoolId": "us-east-1_cdUN8tFB0",
 				"AppClientIDWeb": "4q34m58j12ncjscs300p2du57v",
 				"AppClientID": "2vddd1n7hhum9a3vrvr1evvr3",
-				"IdentityPoolId": "us-east-1:1aee7764-85fd-4ba7-ad07-2387b27c6451",
+				"IdentityPoolId": "us-east-1:911c7997-0813-48e7-8689-214877bf2a73",
 				"IdentityPoolName": "sparkadminappcognito_identitypool_a7d7c10c",
 				"UserPoolName": "sparkadminappuserpool"
 			},
-			"lastPushDirHash": "rcOhq/JquiAhoQBpF4sfAxw/dzM=",
+			"lastPushDirHash": "ywL4CrP+/l2JlN3a4bd+zB9xOqA=",
 			"[object Object]": {}
 		}
 	},
@@ -41,7 +41,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/sparkadminapp-20181013173319-deployment/amplify-cfn-templates/storage/appdynamodb-cloudformation-template.json",
 				"logicalId": "storageappdynamodb"
 			},
-			"lastPushTimeStamp": "2018-10-14T00:53:40.657Z",
+			"lastPushTimeStamp": "2018-10-14T05:53:52.917Z",
 			"output": {
 				"PartitionKeyName": "GameID",
 				"Region": "us-east-1",
@@ -60,7 +60,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/sparkadminapp-20181013173319-deployment/amplify-cfn-templates/hosting/template.json",
 				"logicalId": "hostingS3AndCloudFront"
 			},
-			"lastPushTimeStamp": "2018-10-14T00:53:40.662Z",
+			"lastPushTimeStamp": "2018-10-14T05:53:52.927Z",
 			"output": {
 				"S3BucketSecureURL": "https://sparkadminapp-20181013175940--hostingbucket.s3.amazonaws.com",
 				"WebsiteURL": "http://sparkadminapp-20181013175940--hostingbucket.s3-website-us-east-1.amazonaws.com",
@@ -92,13 +92,42 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/sparkadminapp-20181013173319-deployment/amplify-cfn-templates/function/sparkadminappda27ea0a-cloudformation-template.json",
 				"logicalId": "functionsparkadminappda27ea0a"
 			},
-			"lastPushTimeStamp": "2018-10-14T00:53:40.668Z",
+			"lastPushTimeStamp": "2018-10-14T05:53:52.938Z",
 			"output": {
 				"Region": "us-east-1",
 				"Arn": "arn:aws:lambda:us-east-1:849422063466:function:sparkadminappda27ea0a",
 				"Name": "sparkadminappda27ea0a"
 			},
 			"lastPushDirHash": "/IiZUqxLKIJMl2DljGUvXAA4dGA="
+		},
+		"sparkadminappc048ca10": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "storage",
+					"resourceName": "appdynamodb",
+					"attributes": [
+						"Name",
+						"Arn"
+					]
+				}
+			],
+			"lastBuildTimeStamp": "2018-10-14T05:51:36.841Z",
+			"lastPackageTimeStamp": "2018-10-14T05:51:45.019Z",
+			"distZipFilename": "sparkadminappc048ca10-1539496296-latest-build.zip",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/sparkadminapp-20181013173319-deployment/amplify-cfn-templates/function/sparkadminappc048ca10-cloudformation-template.json",
+				"logicalId": "functionsparkadminappc048ca10"
+			},
+			"lastPushTimeStamp": "2018-10-14T05:53:52.967Z",
+			"output": {
+				"Region": "us-east-1",
+				"Arn": "arn:aws:lambda:us-east-1:849422063466:function:sparkadminappc048ca10",
+				"Name": "sparkadminappc048ca10"
+			},
+			"lastPushDirHash": "3vawhU/3o5JjKWvStSJWprUjRNo="
 		}
 	},
 	"api": {
@@ -113,18 +142,26 @@
 						"Name",
 						"Arn"
 					]
+				},
+				{
+					"category": "function",
+					"resourceName": "sparkadminappc048ca10",
+					"attributes": [
+						"Name",
+						"Arn"
+					]
 				}
 			],
 			"providerMetadata": {
 				"s3TemplateURL": "https://s3.amazonaws.com/sparkadminapp-20181013173319-deployment/amplify-cfn-templates/api/sparkapi-cloudformation-template.json",
 				"logicalId": "apisparkapi"
 			},
-			"lastPushTimeStamp": "2018-10-14T00:53:40.672Z",
+			"lastPushTimeStamp": "2018-10-14T05:53:52.967Z",
 			"output": {
 				"ApiName": "sparkapi",
 				"RootUrl": "https://fo1j7b5lfc.execute-api.us-east-1.amazonaws.com/Prod"
 			},
-			"lastPushDirHash": "q/RvE80u30LNBnd3U9iZTTOOSl4="
+			"lastPushDirHash": "0p5frXoWvjoMYm2tR6B87Qb+W8w="
 		}
 	}
 }
